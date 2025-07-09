@@ -1,0 +1,89 @@
+<?xml version="1.0"?>
+
+<robot name="agribot" xmlns:xacro="http://www.ros.org/wiki/xacro">
+ 
+
+  <!-- Wheels -->
+  <gazebo reference="rear_right_wheel_link">
+    <mu1>1000000000000000.0</mu1>
+    <mu2>1000000000000000.0</mu2>
+    <kp>1000000000000.0</kp>
+    <kd>10.0</kd>
+    <minDepth>0.001</minDepth>
+    <maxVel>0.1</maxVel>
+    <fdir1>1 0 0</fdir1>
+  </gazebo>
+
+  <gazebo reference="rear_left_wheel_link">
+    <mu1>1000000000000000.0</mu1>
+    <mu2>1000000000000000.0</mu2>
+    <kp>1000000000000.0</kp>
+    <kd>10.0</kd>
+    <minDepth>0.001</minDepth>
+    <maxVel>0.1</maxVel>
+    <fdir1>1 0 0</fdir1>
+  </gazebo>
+
+  <gazebo reference="front_right_wheel_link">
+    <mu1>1000000000000000.0</mu1>
+    <mu2>1000000000000000.0</mu2>
+    <kp>1000000000000.0</kp>
+    <kd>10.0</kd>
+    <minDepth>0.001</minDepth>
+    <maxVel>0.1</maxVel>
+    <fdir1>1 0 0</fdir1>
+  </gazebo>
+
+  <gazebo reference="front_left_wheel_link">
+    <mu1>1000000000000000.0</mu1>
+    <mu2>1000000000000000.0</mu2>
+    <kp>1000000000000.0</kp>
+    <kd>10.0</kd>
+    <minDepth>0.001</minDepth>
+    <maxVel>0.1</maxVel>
+    <fdir1>1 0 0</fdir1>
+  </gazebo>
+
+
+    <!-- Gazebo Colors -->
+    <gazebo reference="base_link">
+        <material>Gazebo/Orange</material>
+    </gazebo>
+
+    <gazebo reference="front_left_wheel_link">
+        <material>Gazebo/Black</material>
+    </gazebo>  
+
+    <gazebo reference="front_right_wheel_link">
+        <material>Gazebo/Black</material>
+    </gazebo>  
+
+    <gazebo reference="rear_left_wheel_link">
+        <material>Gazebo/Black</material>
+    </gazebo>  
+
+    <gazebo reference="rear_right_wheel_link">
+        <material>Gazebo/Black</material>
+    </gazebo>  
+
+
+
+<!--  ROS2 control  -->
+  <gazebo>
+      <!-- ROS2 humble -->
+      <xacro:if value="$(arg is_ignition)"> <!-- incase of using ros2 Humble-->
+          <plugin filename="ign_ros2_control-system" name="ign_ros2_control::IgnitionROS2ControlPlugin">
+              <parameters>$(find agribot_controller)/config/agribot_controllers.yaml</parameters>
+          </plugin>
+      </xacro:if>  
+
+      <!-- ROS2 Iron or above -->
+      <xacro:unless value="$(arg is_ignition)"> 
+          <plugin filename="gz_ros2_control-system" name="gz_ros2_control::GazeboSimROS2ControlPlugin">
+              <parameters>$(find agribot_controller)/config/agribot_controllers.yaml</parameters>
+          </plugin>
+      </xacro:unless>
+  </gazebo>
+
+
+</robot>    

@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+
+<robot name="agribot" xmlns:xacro="http://www.ros.org/wiki/xacro">
+ 
+    <ros2_control name="RobotSystem" type="system"> <!-- configure ros2 control library -->
+       
+        <!-- ROS2 Humble-->
+        <xacro:if value="$(arg is_ignition)"> 
+            <hardware>
+                <plugin>ign_ros2_control/IgnitionSystem</plugin>
+            </hardware>
+        </xacro:if>
+        <!-- ROS2 Iron or above-->
+        <xacro:unless value="$(arg is_ignition)"> 
+            <hardware>
+                <plugin>gz_ros2_control/GazeboSimSystem</plugin>
+            </hardware>
+        </xacro:unless>
+
+
+        <!-- ros2_control Common Interfaces -->
+       <joint name="front_left_wheel_joint">
+            <command_interface name="velocity">  <!-- send commands to the motors--> 
+                <param name="min">-1</param>    <!--rad-->
+                <param name="max">1</param>
+            </command_interface>
+            <state_interface name="position"/>   <!-- recive the feedback from the motors-->
+            <state_interface name="velocity"/>
+        </joint>
+
+        <joint name="front_right_wheel_joint">
+            <command_interface name="velocity">   <!-- send commands to the motors-->
+                <param name="min">-1</param>     <!--rad-->
+                <param name="max">1</param>
+            </command_interface>
+            <state_interface name="position"/>    <!-- recive the feedback from the motors-->
+            <state_interface name="velocity"/>
+        </joint> 
+
+        <joint name="rear_left_wheel_joint">
+            <command_interface name="velocity"> <!-- send commands to the motors-->
+                <param name="min">-1</param> <!--rad-->
+                <param name="max">1</param>
+            </command_interface>
+            <state_interface name="position"/> <!-- recive the feedback from the motors-->
+            <state_interface name="velocity"/>
+        </joint>
+        
+        <joint name="rear_right_wheel_joint">
+            <command_interface name="velocity"> <!-- send commands to the motors-->
+                <param name="min">-1</param> <!--rad-->
+                <param name="max">1</param>
+            </command_interface>
+            <state_interface name="position"/> <!-- recive the feedback from the motors-->
+            <state_interface name="velocity"/>
+        </joint>        
+        
+    </ros2_control>
+
+
+</robot>
