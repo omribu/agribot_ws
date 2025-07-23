@@ -60,7 +60,6 @@ ament_python_install_package(${PROJECT_NAME})
 install(PROGRAMS
   ${PROJECT_NAME}/aruco_detector.py
   ${PROJECT_NAME}/aruco_creator.py
-
   DESTINATION lib/${PROJECT_NAME}
 )
 

@@ -47,7 +47,7 @@ def generate_launch_description():
     )
 
 
-    wheel_controller_spwaner =  Node(
+    wheel_controller_spawner =  Node(
         package="controller_manager",
         executable="spawner",
         arguments=[
@@ -77,7 +77,7 @@ def generate_launch_description():
         robot_state_publisher,
         rviz_node,
         joint_state_broadcaster_spawner,
-        wheel_controller_spwaner,
+        wheel_controller_spawner,
         # simple_controller,
         
     ])

@@ -32,13 +32,13 @@ def generate_launch_description():
     
     camera_frame_arg = DeclareLaunchArgument(
         'camera_frame',
-        default_value='camera_link',
+        default_value='camera_link_aligned',  # Uses aligned camera frame to world frame
         description='Camera frame name'
     )
     
     world_frame_arg = DeclareLaunchArgument(
         'world_frame',
-        default_value='map',
+        default_value='odom',
         description='World frame name'
     )
     
@@ -78,10 +78,43 @@ def generate_launch_description():
             'enable_infra2': False,
             }],
         )
-            
 
+    world_static_transform_publisher = Node(
+        package="tf2_ros",
+        executable="static_transform_publisher",
+        name="odom_frame",
+        arguments=[
+            "0", "0", "0",    # Translation (x, y, z)
+            "0", "0", "0", "1",  # Quaternion (x, y, z, w)
+            "odom",          #
+                        # Child frame
+        ]
+    )
 
+    camera_initial_pose_tf = Node(
+        package="tf2_ros",
+        executable="static_transform_publisher",
+        name="camera_initial_pose_tf",
+        arguments=[
+            "0", "0", "0",             # Translation (x y z)
+            "0", "0", "0", "1",        # Quaternion (x y z w)
+            "odom",                    # Parent frame
+            "camera_link_aligned"      # Child frame
+    ]
+)
 
+    
+    # Camera: Z(front), X(right), Y(down) → World: X(front), Y(left), Z(up) 
+    camera_static_transform_publisher = Node(
+        package="tf2_ros",
+        executable="static_transform_publisher",
+        arguments=[
+            "0", "0", "0",                    # Translation (x, y, z)
+            "0", "0", "0", "1",      
+            "camera_link",                    
+            "camera_link_aligned"             
+            ],
+        )
 
     # ArUco detector node
     aruco_detector_node = Node(
@@ -100,6 +133,14 @@ def generate_launch_description():
             'detection_rate': 10.0
         }]
     )
+
+    rviz_node = Node(
+        package="rviz2",
+        executable="rviz2",
+        name="rviz2",
+        output="screen",
+        arguments=["-d", os.path.join(get_package_share_directory("agribot_landmarks"), "config", "display.rviz")]
+    )
     
     return LaunchDescription([
         camera_topic_arg,
@@ -110,5 +151,9 @@ def generate_launch_description():
         publish_tf_arg,
         publish_markers_arg,
         camera_node,
+        world_static_transform_publisher,
+        camera_initial_pose_tf,
+        camera_static_transform_publisher,
         aruco_detector_node,
+        rviz_node,
     ])
